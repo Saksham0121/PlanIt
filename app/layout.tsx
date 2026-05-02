@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Link from "next/dist/client/link";
+import { NeonAuthUIProvider, UserButton } from "@neondatabase/auth/react/ui";
+import { authClient } from "@/lib/auth/client";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,8 +29,26 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <NeonAuthUIProvider authClient={authClient as any}>
+          <header className="bg-slate-800 border-slate-700 rounded-lg shadow-lg">
+            <div className="flex flex row px-2 py-6 justify-between items-center">
+              <Link href={"/"}>PlanIt</Link>
+              <nav className="flex item-center gap-4">
+                <Link href={"/dashboard"} className="text-sm text-slate-300">
+                  Dashboard
+                </Link>
+                <UserButton size="icon" />
+              </nav>
+            </div>
+          </header>
+          <main className="flex-1 mx-auto w-full max-w-6xl flex-col px-6 py-4">
+            {children}
+          </main>
+        </NeonAuthUIProvider>
+      </body>
     </html>
   );
 }
