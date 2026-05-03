@@ -32,7 +32,7 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col">
-        <NeonAuthUIProvider authClient={authClient as any}>
+        <NeonAuthUIProvider authClient={authClient as any} >
           <header className="bg-slate-800 border-slate-700 rounded-lg shadow-lg">
             <div className="flex flex row px-2 py-6 justify-between items-center">
               <Link href={"/"}>PlanIt</Link>
