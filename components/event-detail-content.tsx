@@ -45,6 +45,12 @@ export default async function EventDetailsContent({
     }
 
     const createInviteActionForEvent =  createInviteLinkAction.bind(null, event.id)
+
+    const inviteUrl = event.inviteToken 
+        ? `${process.env.NEXT_PUBLIC_APP_URL 
+            ?? ""}/invite/${event.inviteToken}`
+        : null;
+
     return (
     <div className="flex flex-col gap-6">
         <div className="flex flex-wrap justify-between gap-3">
@@ -75,7 +81,12 @@ export default async function EventDetailsContent({
                 <p>
                     Share this link with guests so they can RSVP without creating an account.
                 </p>
-
+                {inviteUrl ? (<div className="rounded-d border border-[var(--border)] bg-[var(--surface)] p-3 text-sm">
+                    {inviteUrl}
+                </div>) : (<p className="text-sm text-[var(--muted-foreground)]">
+                    No invite link created yet.
+                </p>
+                )}
                 <form action={createInviteActionForEvent}>
                     <Button type="submit">Generate Link</Button>
                 </form>

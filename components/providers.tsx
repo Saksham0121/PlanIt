@@ -14,7 +14,7 @@ if (typeof window !== "undefined" && process.env.NODE_ENV === "development") {
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <NeonAuthUIProvider authClient={authClient as any}>
+    <NeonAuthUIProvider authClient={authClient as any} defaultTheme="dark">
       {children}
     </NeonAuthUIProvider>
   );

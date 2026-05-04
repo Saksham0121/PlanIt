@@ -59,8 +59,12 @@ export async function createInviteLinkAction(eventId:string) {
         throw new Error("You don't own this event");
     }
 
-    const token = crypto.randomUUID();
+    const token = crypto.randomUUID().replace(/-/g, "");
     
-    
+    await prisma.eventInvite.upsert({
+        where: {eventId},
+        create: {eventId, token},
+        update: {token},
+    });
 
 }

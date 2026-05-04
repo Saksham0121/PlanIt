@@ -1,3 +1,5 @@
+// this is a middleware that is used to protect the routes that require authentication
+
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth/server"; 
 
@@ -15,14 +17,7 @@ export default async function proxy(request: NextRequest) {
     return auth.middleware({ loginUrl: "/auth/sign-in" })(request);
 }
 
+// the paths that require authentication
 export const config = {
-    matcher: [
-        /*
-         * Match all request paths except for the ones starting with:
-         * - _next/static (static files)
-         * - _next/image (image optimization files)
-         * - favicon.ico, robots.txt, etc. (metadata files)
-         */
-        "/((?!_next/static|_next/image|favicon.ico|robots.txt).*)",
-    ],
+    matcher: ["/dashboard/:path*","/events/:path*"],
 };
