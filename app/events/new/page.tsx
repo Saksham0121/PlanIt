@@ -3,6 +3,9 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { FormMessage } from "@/components/ui/form";
+import Link from "next/link";
+import { createEventAction } from "@/lib/actions/events";
 
 export default async function NewEventPage() {
     return (
@@ -12,7 +15,7 @@ export default async function NewEventPage() {
                     <CardTitle>Create event</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <form className="space-y-4">
+                    <form action= {createEventAction} className="space-y-4">
                         <div className="space-y-2">
                             <Label htmlFor="title">Title</Label>
                             <Input
@@ -31,8 +34,33 @@ export default async function NewEventPage() {
                                 placeholder="Event Description"
                             />
                         </div>
-                        
-                        <Button type="submit">Create Event</Button>
+
+                        <div className="space-y-2">
+                            <Label htmlFor="location">Location</Label>
+                            <Input
+                                id="location"
+                                name="location"
+                                placeholder="Event Location"
+                            />
+                        </div>
+
+                        <div className="space-y-2">
+                            <Label htmlFor="eventDate">Date and Time</Label>
+                            <Input
+                                id="eventDate"
+                                name="eventDate"
+                                type="datetime-local"
+                            />
+                            <p className="ml-2 text-muted-foreground text-xs">Optional, you can setv this later</p>
+                        </div>
+
+                        <div className="flex items-center gap-3">
+                            <Button type="submit">Create Event</Button>
+                            <Button type="button" variant="outline" asChild>
+                                <Link href={"/dashboard"}>Cancel</Link>
+                            </Button>
+                        </div>
+
                     </form>
                 </CardContent>
             </Card>

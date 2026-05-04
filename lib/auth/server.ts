@@ -7,6 +7,6 @@ export const auth = createNeonAuth({
   },
 });
 
-export function GetSession(){
+export function getSession(){
   return auth.getSession();
 }

@@ -1,4 +1,4 @@
-import { GetSession } from "@/lib/auth/server"
+import { getSession } from "@/lib/auth/server"
 import { DashboardContent } from "@/components/dashboard-content"
 
 export default async function Dashboard({userId}: {userId: string}) {
