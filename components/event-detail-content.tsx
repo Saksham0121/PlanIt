@@ -62,7 +62,7 @@ export default async function EventDetailsContent({
 
                     {event.location ? ` - ${event.location}` : ""}
                 </p>
-                <p> {event.description && <p> {event.description} </p>} </p>
+                <p> {event.description && <p className="text-md"> {event.description} </p>} </p>
             </div>
             <Button asChild variant = "outline" >
                 <Link href= {"/dashboard"} > Back </Link>

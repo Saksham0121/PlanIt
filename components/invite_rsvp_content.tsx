@@ -3,10 +3,10 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Badge } from "./ui/badge";
-import { RsvpStatus as PrismaRsvpStatus } from "@/app/generated/prisma/enums";
 import { notFound } from "next/navigation";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
+import { submitOrUpdateRsvpAction } from "@/lib/actions/events";
 
 
 export async function InviteRsvpContent({
@@ -17,7 +17,7 @@ export async function InviteRsvpContent({
         submitted: boolean
     }) {
     
-    const row = await prisma.eventInvite.findMany({
+    const row = await prisma.eventInvite.findUnique({
         where : { token },
         include:{
             event: {
@@ -35,7 +35,7 @@ export async function InviteRsvpContent({
     if(!row){
         notFound();
     }
-    const e = row[0].event;
+    const e = row.event;
     const event = {
         title : e.title,
         description : e.description,
@@ -44,6 +44,7 @@ export async function InviteRsvpContent({
         
     }
 
+    const submitRsvpForToken = submitOrUpdateRsvpAction.bind(null, token);
 
     return (
         <div className="flex flex-1 flex-col gap-8">
@@ -70,7 +71,7 @@ export async function InviteRsvpContent({
                             Thank you! Your RSVP has been recorded.
                         </p>
                     ) : null}
-                        <form className="space-y-4">
+                        <form action = {submitRsvpForToken} className="space-y-4">
                             <div className="space-y-2">
                             <Label htmlFor="name">Name</Label>
                             <Input
