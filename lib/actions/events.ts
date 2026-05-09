@@ -69,6 +69,8 @@ export async function createEventAction(formData: FormData) {
     }
 }
 
+import { revalidatePath } from "next/cache";
+
 // This function creates an invite link for an event.
 export async function createInviteLinkAction(eventId: string) {
     const session = await getSession();
@@ -93,9 +95,11 @@ export async function createInviteLinkAction(eventId: string) {
         create: { eventId, token },
         update: { token },
     });
+    
+    revalidatePath(`/events/${eventId}`);
 }
 
-// This function handles the RSVP form submission.
+// This function handles the RSVP form submission
 export async function submitOrUpdateRsvpAction(
     token: string,
     formData: FormData,
