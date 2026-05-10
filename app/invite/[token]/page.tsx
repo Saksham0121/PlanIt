@@ -1,4 +1,3 @@
-import EventDetailsContent from "@/components/event-detail-content";
 import { InviteRsvpContent } from "@/components/invite_rsvp_content";
 
 

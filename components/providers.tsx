@@ -2,6 +2,7 @@
 
 import { NeonAuthUIProvider } from "@neondatabase/auth/react/ui";
 import { authClient } from "@/lib/auth/client";
+import type { ComponentProps, ReactNode } from "react";
 
 // This silences the React 19 strict mode warning about script tags.
 if (typeof window !== "undefined" && process.env.NODE_ENV === "development") {
@@ -12,9 +13,11 @@ if (typeof window !== "undefined" && process.env.NODE_ENV === "development") {
   };
 }
 
-export function Providers({ children }: { children: React.ReactNode }) {
+type NeonAuthClient = ComponentProps<typeof NeonAuthUIProvider>["authClient"];
+
+export function Providers({ children }: { children: ReactNode }) {
   return (
-    <NeonAuthUIProvider authClient={authClient as any} defaultTheme="dark">
+    <NeonAuthUIProvider authClient={authClient as unknown as NeonAuthClient} defaultTheme="dark">
       {children}
     </NeonAuthUIProvider>
   );

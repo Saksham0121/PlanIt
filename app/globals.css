@@ -2,14 +2,90 @@
 @import "@neondatabase/auth/ui/tailwind";
 
 @theme {
-  --color-background: #0b1120; /* Deep navy blue background */
-  --color-primary: #3b82f6; /* Soft sky blue (used in buttons and highlights) */
-  --color-secondary: #06b6d4; /* Cyan accent (used in code highlights and icons) */
-  --color-foreground: #f1f5f9; /* Light text color */
-  --color-muted: #94a3b8; /* Muted slate (used for secondary text) */
+  --color-background: #06131f;
+  --color-foreground: #f7efe3;
+  --color-card: rgb(255 255 255 / 0.07);
+  --color-card-foreground: #f7efe3;
+  --color-popover: #091a2a;
+  --color-popover-foreground: #f7efe3;
+  --color-primary: #2dd4bf;
+  --color-primary-foreground: #031018;
+  --color-secondary: #d6aa78;
+  --color-secondary-foreground: #08131f;
+  --color-muted: rgb(255 255 255 / 0.1);
+  --color-muted-foreground: rgb(247 239 227 / 0.68);
+  --color-border: rgb(255 255 255 / 0.14);
+  --color-input: rgb(255 255 255 / 0.14);
+  --color-ring: #2dd4bf;
+  --color-destructive: #fb7185;
+  --radius-md: 0.5rem;
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  html {
+    background: var(--color-background);
+  }
+
+  body {
+    min-height: 100vh;
+    color: var(--color-foreground);
+    background:
+      radial-gradient(circle at 50% 12%, rgb(35 92 122 / 0.34), transparent 31rem),
+      linear-gradient(180deg, #03111c 0%, #071d2d 45%, #07101a 100%);
+  }
+
+  body::before,
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    pointer-events: none;
+  }
+
+  body::before {
+    opacity: 0.7;
+    background-image:
+      radial-gradient(circle, rgb(255 255 255 / 0.9) 0 1px, transparent 1.5px),
+      radial-gradient(circle, rgb(45 212 191 / 0.7) 0 1px, transparent 1.6px),
+      radial-gradient(circle, rgb(214 170 120 / 0.65) 0 1px, transparent 1.4px);
+    background-position: 0 0, 70px 110px, 160px 40px;
+    background-size: 280px 280px, 360px 360px, 460px 460px;
+    animation: star-drift 90s linear infinite;
+  }
+
+  body::after {
+    z-index: -1;
+    background:
+      linear-gradient(90deg, rgb(2 9 14 / 0.92), transparent 18%, transparent 82%, rgb(2 9 14 / 0.92)),
+      linear-gradient(180deg, rgb(2 9 14 / 0.34), transparent 42%, rgb(2 9 14 / 0.74)),
+      radial-gradient(circle at 18% 72%, rgb(45 212 191 / 0.12), transparent 20rem),
+      radial-gradient(circle at 84% 30%, rgb(214 170 120 / 0.12), transparent 23rem);
+  }
+
+  ::selection {
+    background: rgb(45 212 191 / 0.28);
+    color: white;
+  }
 }
 
 @layer components {
+  .sky-shell {
+    @apply relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.06] shadow-[0_24px_80px_rgb(0_0_0/0.28)] backdrop-blur-xl;
+  }
+
+  .section-rule {
+    @apply h-px w-full bg-gradient-to-r from-transparent via-secondary/70 to-transparent;
+  }
+
+  .soft-panel {
+    @apply rounded-2xl border border-white/10 bg-white/[0.06] shadow-[0_18px_60px_rgb(0_0_0/0.22)] backdrop-blur-xl;
+  }
+
   .card {
     @apply bg-slate-800 border border-slate-700 rounded-lg shadow-lg;
   }
@@ -28,5 +104,21 @@
 
   .btn-danger {
     @apply bg-red-600 text-white px-4 py-2 rounded-md font-medium hover:bg-red-700 transition-colors cursor-pointer;
+  }
+}
+
+@keyframes star-drift {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    transform: translate3d(-280px, 180px, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::before {
+    animation: none;
   }
 }

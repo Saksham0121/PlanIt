@@ -1,7 +1,6 @@
 // this is a middleware that is used to protect the routes that require authentication
 
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/lib/auth/server"; 
 
 function isServerActionPost(request: NextRequest) {
     if (request.method != "POST") return false;

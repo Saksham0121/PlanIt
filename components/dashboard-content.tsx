@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Badge } from "./ui/badge";
 import { RsvpStatus as PrismaRsvpStatus } from "@/app/generated/prisma/enums";
+import { ArrowRight, CalendarDays, MapPin, Plus, Users } from "lucide-react";
 
 
 export function countByStatus(rsvps: {status: PrismaRsvpStatus}[]) {
@@ -44,64 +45,97 @@ export async function DashboardContent({userId}: {userId: string}) {
         ...countByStatus(e.rsvps),
     }))
 
+    const totals = events.reduce(
+        (acc, event) => ({
+            going: acc.going + event.goingcount,
+            maybe: acc.maybe + event.maybecount,
+            notGoing: acc.notGoing + event.notgoingcount,
+        }),
+        { going: 0, maybe: 0, notGoing: 0 }
+    );
+
     return (
-        <div className="flex flex-1 flex-col gap-8">
-            {/* Header Section */}
-            <div className="flex flex-wrap items-center gap-4 justify-between">
-                <div>
-                    <h1 className="text-4xl font-semibold tracking-tight">Events</h1>
-                    <p className="text-sm text-muted-foreground mt-1">
-                        Manage your events and RSVPs here
-                    </p>
-                </div>
-                <div>
-                    <Button asChild>
-                        <Link href={"/events/new"}>Create New Event</Link>
+        <div className="flex flex-1 flex-col gap-8 pb-12">
+            <section className="soft-panel p-6 sm:p-8">
+                <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+                    <div className="max-w-2xl space-y-3">
+                        <p className="text-sm font-medium uppercase tracking-[0.24em] text-primary">Command center</p>
+                        <h1 className="text-4xl font-light tracking-normal text-secondary sm:text-5xl">Your events</h1>
+                        <p className="text-white/60">
+                            Create invite links, watch responses arrive, and open any event when you need the guest list.
+                        </p>
+                    </div>
+                    <Button asChild size="lg" className="h-11 rounded-full bg-primary px-5 text-primary-foreground hover:bg-primary/90">
+                        <Link href={"/events/new"}>
+                            <Plus className="size-4" />
+                            New event
+                        </Link>
                     </Button>
                 </div>
-            </div>
 
-            {/* Events Grid Section */}
+                <div className="mt-8 grid gap-3 sm:grid-cols-4">
+                    {[
+                        ["Events", events.length, "text-white"],
+                        ["Going", totals.going, "text-emerald-300"],
+                        ["Maybe", totals.maybe, "text-secondary"],
+                        ["Not going", totals.notGoing, "text-white/55"],
+                    ].map(([label, value, color]) => (
+                        <div key={label} className="rounded-xl border border-white/10 bg-white/[0.05] p-4">
+                            <p className="text-sm text-white/45">{label}</p>
+                            <p className={`mt-2 text-3xl font-semibold ${color}`}>{value}</p>
+                        </div>
+                    ))}
+                </div>
+            </section>
+
             {events.length === 0 ? (
-                <Card className="flex flex-col items-center justify-center p-10 text-center border-dashed">
+                <Card className="soft-panel items-center justify-center border-dashed p-10 text-center">
                     <CardHeader>
-                        <CardTitle className="text-2xl">No events created yet</CardTitle>
+                        <CardTitle className="text-2xl text-white">No events created yet</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <p className="text-muted-foreground mb-6">
-                            You haven't created any events. Click the button above to get started.
+                        <p className="mb-6 text-white/58">
+                            Start with the basics. You can add a date, location, and invite link in a few seconds.
                         </p>
-                        <Button variant="outline" asChild>
-                            <Link href={"/events/new"}>Create New Event</Link>
+                        <Button asChild className="rounded-full bg-primary text-primary-foreground hover:bg-primary/90">
+                            <Link href={"/events/new"}>
+                                <Plus className="size-4" />
+                                Create event
+                            </Link>
                         </Button>
                     </CardContent>
                 </Card>
             ) : (
-                <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+                <div className="grid gap-6  grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
                     {events.map((event) => (
-                        <Card key={event.id} className="flex flex-col hover:shadow-md transition-shadow">
+                        <Card key={event.id} className="soft-panel gap-5 p-3 transition-transform duration-300 hover:-translate-y-1">
                             <CardHeader className="pb-4">
                                 <div className="flex items-start justify-between gap-4">
-                                    <CardTitle className="text-xl line-clamp-1">{event.title}</CardTitle>
-                                    <Button size="sm" variant="secondary" asChild>
-                                        <Link href={`/events/${event.id}`}>Open</Link>
+                                    <CardTitle className="line-clamp-2 text-xl text-white">{event.title}</CardTitle>
+                                    <Button size="icon-sm" variant="outline" asChild className="rounded-full border-white/12 bg-white/8 text-white hover:bg-white/12" title="Open event">
+                                        <Link href={`/events/${event.id}`} aria-label={`Open ${event.title}`}>
+                                            <ArrowRight className="size-4" />
+                                        </Link>
                                     </Button>
                                 </div>
                                 <div className="flex flex-wrap gap-2 pt-2">
-                                    {/* Placeholder badges until RSVPs are loaded */}
-                                    <Badge variant="default" className="bg-emerald-600/10 text-emerald-600 hover:bg-emerald-600/20">Going: {event.goingcount}</Badge> 
-                                    <Badge variant="secondary" className="bg-amber-600/10 text-amber-600 hover:bg-amber-600/20">Maybe: {event.maybecount}</Badge> 
-                                    <Badge variant="secondary" className="bg-red-600/10 text-red-600 hover:bg-red-600/20">Not Going: {event.notgoingcount}</Badge> 
+                                    <Badge variant="outline" className="border-emerald-300/20 bg-emerald-300/10 text-emerald-300">Going {event.goingcount}</Badge> 
+                                    <Badge variant="outline" className="border-secondary/25 bg-secondary/10 text-secondary">Maybe {event.maybecount}</Badge> 
+                                    <Badge variant="outline" className="border-white/10 bg-white/5 text-white/55">Out {event.notgoingcount}</Badge> 
                                 </div>
                             </CardHeader>
-                            <CardContent className="mt-auto text-sm text-muted-foreground space-y-2">
+                            <CardContent className="mt-auto space-y-3 text-sm text-white/58">
                                 <div className="flex items-center gap-2">
-                                    <span>📍</span>
+                                    <MapPin className="size-4 text-primary" />
                                     <span className="line-clamp-1">{event.location ? event.location : "Not specified"}</span>
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <span>📅</span>
+                                    <CalendarDays className="size-4 text-primary" />
                                     <span>{event.eventDate ? new Date(event.eventDate).toLocaleDateString() : "Not specified"}</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <Users className="size-4 text-primary" />
+                                    <span>{event.goingcount + event.maybecount + event.notgoingcount} total responses</span>
                                 </div>
                             </CardContent>
                         </Card>

@@ -5,9 +5,9 @@ import { Button } from "./ui/button";
 import Link from "next/link";
 import { Badge } from "./ui/badge";
 import { Card, CardContent, CardHeader } from "./ui/card";
-import { Form } from "radix-ui";
 import { createInviteLinkAction } from "@/lib/actions/events";
 import { TableBody, TableCell, TableHead, TableHeader, TableRow } from "./ui/table";
+import { ArrowLeft, CalendarDays, Copy, Link as LinkIcon, MapPin, RefreshCw, Users } from "lucide-react";
 
 export default async function EventDetailsContent({
     userId,
@@ -72,100 +72,144 @@ export default async function EventDetailsContent({
             ?? ""}/invite/${event.inviteToken}`
         : null;
 
+    const totalResponses = event.goingCount + event.maybeCount + event.notGoingCount;
+
     return (
-    <div className="flex flex-col gap-6 max-w-5xl mx-auto w-full pt-4 pb-12">
-        <div className="flex flex-wrap justify-between gap-4 bg-slate-900/40 p-6 rounded-xl border border-slate-800/80 shadow-sm">
-            <div className="space-y-2">
-                <h1 className="text-3xl font-bold tracking-tight text-slate-100">{event.title}</h1>
-                <p className="text-slate-400 flex items-center gap-2">
-                    {event.eventDate 
-                    ? new Date(event.eventDate).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })
-                    : "No date selected"}
-                    {event.location ? <span className="text-slate-500"> • {event.location}</span> : ""}
-                </p>
-                {event.description && <p className="text-slate-300 pt-2 leading-relaxed max-w-2xl"> {event.description} </p>}
-                
-                <div className="flex flex-wrap gap-3 pt-4">
-                    <Badge variant="default" className="bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 border border-emerald-500/20">Going: {event.goingCount}</Badge> 
-                    <Badge variant="secondary" className="bg-amber-500/10 text-amber-400 hover:bg-amber-500/20 border border-amber-500/20">Maybe: {event.maybeCount}</Badge> 
-                    <Badge variant="secondary" className="bg-slate-500/10 text-slate-400 hover:bg-slate-500/20 border border-slate-500/20">Not Going: {event.notGoingCount}</Badge> 
-                </div>
-            </div>
-            <Button asChild variant="outline" className="border-slate-700 bg-slate-800/50 hover:bg-slate-800 text-slate-200 shadow-sm">
-                <Link href={"/dashboard"}>Back to Dashboard</Link>
+    <div className="flex w-full flex-col gap-6 pb-12">
+        <div className="flex">
+            <Button asChild variant="ghost" className="rounded-full text-white/65 hover:bg-white/8 hover:text-white">
+                <Link href={"/dashboard"}>
+                    <ArrowLeft className="size-4" />
+                    Dashboard
+                </Link>
             </Button>
         </div>
-                    
-        <Card className="bg-slate-900/40 border-slate-800/80 shadow-lg">
-            <CardHeader className="pb-4">
-                <h2 className="text-xl font-semibold text-slate-100">Invite Link</h2>
-                <p className="text-sm text-slate-400">
-                    Share this link with guests so they can RSVP without creating an account.
-                </p>
-            </CardHeader>
-            <CardContent className="space-y-5">
-                {inviteUrl ? (
-                    <div className="rounded-md border border-slate-700 bg-slate-800/50 p-4 text-sm text-blue-400 font-mono select-all overflow-x-auto whitespace-nowrap shadow-inner">
-                        {inviteUrl}
-                    </div>
-                ) : (
-                    <p className="text-sm text-slate-500 italic">
-                        No invite link created yet. Click below to generate one.
-                    </p>
-                )}
-                <form action={createInviteActionForEvent}>
-                    <Button type="submit" className="bg-blue-600 text-white hover:bg-blue-700 shadow-md">
-                        {inviteUrl ? "Regenerate Link" : "Generate Link"}
-                    </Button>
-                </form>
-            </CardContent>
-        </Card>
 
-        <Card className="bg-slate-900/40 border-slate-800/80 shadow-lg">
-            <CardHeader className="pb-4">
-                <h2 className="text-xl font-semibold text-slate-100">RSVP List</h2>
-            </CardHeader>
-            <CardContent>
-                {rsvps.length === 0 ? (
-                    <div className="text-center py-12 text-slate-500 bg-slate-900/20 rounded-lg border border-slate-800/50 border-dashed">
-                        No RSVPs yet. Share your invite link to get started!
+        <section className="soft-panel p-6 sm:p-8">
+            <div className="grid gap-8 lg:grid-cols-[1fr_22rem]">
+                <div className="space-y-5">
+                    <p className="text-sm font-medium uppercase tracking-[0.24em] text-primary">Event details</p>
+                    <div>
+                        <h1 className="max-w-3xl text-4xl font-light tracking-normal text-secondary sm:text-5xl">{event.title}</h1>
+                        {event.description && <p className="mt-4 max-w-2xl leading-7 text-white/65">{event.description}</p>}
                     </div>
-                ) : (
-                    <div className="rounded-md border border-slate-800 overflow-hidden shadow-inner">
-                        <table className="w-full text-sm text-left">
-                            <TableHeader className="bg-slate-800/50">
-                                <TableRow className="border-b border-slate-800 hover:bg-transparent">
-                                    <TableHead className="text-slate-300 font-medium h-10 px-4">Name</TableHead>
-                                    <TableHead className="text-slate-300 font-medium h-10 px-4 hidden sm:table-cell">Email</TableHead>
-                                    <TableHead className="text-slate-300 font-medium h-10 px-4">Status</TableHead>
-                                    <TableHead className="text-slate-300 font-medium h-10 px-4 text-right">Responded At</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {rsvps.map((rsvp) => (
-                                    <TableRow key={rsvp.id} className="border-b border-slate-800/50 hover:bg-slate-800/30 transition-colors">
-                                        <TableCell className="px-4 py-3 font-medium text-slate-200">{rsvp.name}</TableCell>
-                                        <TableCell className="px-4 py-3 text-slate-400 hidden sm:table-cell">{rsvp.email}</TableCell>
-                                        <TableCell className="px-4 py-3">
-                                            <Badge variant="secondary" className={`
-                                                ${rsvp.status === 'going' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : ''}
-                                                ${rsvp.status === 'maybe' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' : ''}
-                                                ${rsvp.status === 'notGoing' ? 'bg-slate-500/10 text-slate-400 border-slate-500/20' : ''}
-                                                border capitalize
-                                            `}>
-                                                {rsvp.status === 'notGoing' ? 'Not Going' : rsvp.status}
-                                            </Badge>
-                                        </TableCell>
-                                        <TableCell className="px-4 py-3 text-slate-500 text-right whitespace-nowrap">
-                                            {new Date(rsvp.respondedAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
-                                        </TableCell>
+
+                    <div className="grid gap-3 sm:grid-cols-2">
+                        <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/[0.05] p-4 text-white/70">
+                            <CalendarDays className="size-5 text-primary" />
+                            <span>
+                                {event.eventDate 
+                                ? new Date(event.eventDate).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })
+                                : "No date selected"}
+                            </span>
+                        </div>
+                        <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/[0.05] p-4 text-white/70">
+                            <MapPin className="size-5 text-primary" />
+                            <span>{event.location || "No location selected"}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="grid gap-3 sm:grid-cols-4 lg:grid-cols-2">
+                    {[
+                        ["Responses", totalResponses, "text-white"],
+                        ["Going", event.goingCount, "text-emerald-300"],
+                        ["Maybe", event.maybeCount, "text-secondary"],
+                        ["Out", event.notGoingCount, "text-white/55"],
+                    ].map(([label, value, color]) => (
+                        <div key={label} className="rounded-xl border border-white/10 bg-white/[0.05] p-4">
+                            <p className="text-sm text-white/45">{label}</p>
+                            <p className={`mt-2 text-3xl font-semibold ${color}`}>{value}</p>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </section>
+                    
+        <div className="grid gap-6 lg:grid-cols-[24rem_1fr]">
+            <Card className="soft-panel">
+                <CardHeader className="pb-1">
+                    <div className="flex items-center gap-3">
+                        <span className="grid size-10 place-items-center rounded-full bg-primary/12 text-primary">
+                            <LinkIcon className="size-5" />
+                        </span>
+                        <div>
+                            <h2 className="text-xl font-semibold text-white">Invite link</h2>
+                            <p className="text-sm text-white/55">Share this with guests.</p>
+                        </div>
+                    </div>
+                </CardHeader>
+                <CardContent className="space-y-5">
+                    {inviteUrl ? (
+                        <div className="rounded-xl border border-white/12 bg-[#03111c]/72 p-4 text-sm font-mono text-primary shadow-inner">
+                            <p className="break-all">{inviteUrl}</p>
+                        </div>
+                    ) : (
+                        <div className="rounded-xl border border-dashed border-white/14 bg-white/[0.04] p-4 text-sm text-white/48">
+                            Generate a link before sharing this event.
+                        </div>
+                    )}
+                    <form action={createInviteActionForEvent}>
+                        <Button type="submit" className="w-full rounded-full bg-primary text-primary-foreground hover:bg-primary/90">
+                            {inviteUrl ? <RefreshCw className="size-4" /> : <Copy className="size-4" />}
+                            {inviteUrl ? "Regenerate link" : "Generate link"}
+                        </Button>
+                    </form>
+                </CardContent>
+            </Card>
+
+            <Card className="soft-panel">
+                <CardHeader className="pb-1">
+                    <div className="flex items-center justify-between gap-4">
+                        <div>
+                            <h2 className="text-xl font-semibold text-white">Guest list</h2>
+                            <p className="text-sm text-white/55">{totalResponses} responses recorded</p>
+                        </div>
+                        <Users className="size-5 text-primary" />
+                    </div>
+                </CardHeader>
+                <CardContent>
+                    {rsvps.length === 0 ? (
+                        <div className="rounded-xl border border-dashed border-white/14 bg-white/[0.04] py-12 text-center text-white/45">
+                            No RSVPs yet. Share your invite link to get started.
+                        </div>
+                    ) : (
+                        <div className="overflow-hidden rounded-xl border border-white/10">
+                            <table className="w-full text-left text-sm">
+                                <TableHeader className="bg-white/[0.06]">
+                                    <TableRow className="border-b border-white/10 hover:bg-transparent">
+                                        <TableHead className="h-11 px-4 font-medium text-white/72">Name</TableHead>
+                                        <TableHead className="hidden h-11 px-4 font-medium text-white/72 sm:table-cell">Email</TableHead>
+                                        <TableHead className="h-11 px-4 font-medium text-white/72">Status</TableHead>
+                                        <TableHead className="h-11 px-4 text-right font-medium text-white/72">Responded</TableHead>
                                     </TableRow>
-                                ))}
-                            </TableBody>
-                        </table>
-                    </div>
-                )}
-            </CardContent>
-        </Card>
+                                </TableHeader>
+                                <TableBody>
+                                    {rsvps.map((rsvp) => (
+                                        <TableRow key={rsvp.id} className="border-b border-white/8 hover:bg-white/[0.05]">
+                                            <TableCell className="px-4 py-3 font-medium text-white">{rsvp.name}</TableCell>
+                                            <TableCell className="hidden px-4 py-3 text-white/55 sm:table-cell">{rsvp.email}</TableCell>
+                                            <TableCell className="px-4 py-3">
+                                                <Badge variant="outline" className={`
+                                                    ${rsvp.status === 'going' ? 'border-emerald-300/20 bg-emerald-300/10 text-emerald-300' : ''}
+                                                    ${rsvp.status === 'maybe' ? 'border-secondary/25 bg-secondary/10 text-secondary' : ''}
+                                                    ${rsvp.status === 'notGoing' ? 'border-white/10 bg-white/5 text-white/55' : ''}
+                                                    capitalize
+                                                `}>
+                                                    {rsvp.status === 'notGoing' ? 'Not going' : rsvp.status}
+                                                </Badge>
+                                            </TableCell>
+                                            <TableCell className="whitespace-nowrap px-4 py-3 text-right text-white/45">
+                                                {new Date(rsvp.respondedAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </table>
+                        </div>
+                    )}
+                </CardContent>
+            </Card>
+        </div>
     </div>)
 }

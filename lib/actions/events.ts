@@ -63,7 +63,7 @@ export async function createEventAction(formData: FormData) {
 
             }
         });
-        redirect(`/event/${created.id}`)
+        redirect(`/events/${created.id}`)
     } catch (err) {
         console.log(err);
     }
