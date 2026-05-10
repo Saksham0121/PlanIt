@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowRight, CalendarPlus, Link as LinkIcon, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { SignedIn, SignedOut } from "@neondatabase/auth/react/ui";
 
 export default function Home() {
   return (
@@ -27,17 +28,26 @@ export default function Home() {
             No accounts required for your guests.
           </p>
           
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-5 pt-8">
-            <Button asChild size="lg" className="h-14 px-8 text-lg font-semibold rounded-full bg-white text-slate-950 hover:bg-slate-200 transition-all shadow-[0_0_30px_-5px_rgba(255,255,255,0.4)]">
-              <Link href="/dashboard">
-                Start Planning <ArrowRight className="ml-2 h-5 w-5" />
-              </Link>
-            </Button>
-            <Button asChild size="lg" variant="outline" className="h-14 px-8 text-lg font-medium rounded-full border-slate-700 bg-slate-800/50 backdrop-blur-md hover:bg-slate-800 text-white transition-all">
-              <Link href="#features">
-                How it works
-              </Link>
-            </Button>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-8 w-full max-w-2xl mx-auto">
+            <SignedIn>
+              <Button asChild size="lg" className="h-14 px-8 text-lg font-semibold rounded-full bg-white text-slate-950 hover:bg-slate-200 transition-all shadow-[0_0_30px_-5px_rgba(255,255,255,0.4)] w-full sm:w-auto">
+                <Link href="/dashboard">
+                  Open dashboard <ArrowRight className="ml-2 h-5 w-5" />
+                </Link>
+              </Button>
+            </SignedIn>
+            <SignedOut>
+              <Button asChild size="lg" className="h-14 px-8 text-lg font-semibold rounded-full bg-white text-slate-950 hover:bg-slate-200 transition-all shadow-[0_0_30px_-5px_rgba(255,255,255,0.4)] w-full sm:w-auto">
+                <Link href="/auth/sign-up">
+                  Create account
+                </Link>
+              </Button>
+              <Button asChild size="lg" variant="outline" className="h-14 px-8 text-lg font-medium rounded-full border-slate-700 bg-slate-800/50 backdrop-blur-md hover:bg-slate-800 text-white transition-all w-full sm:w-auto">
+                <Link href="/auth/sign-in">
+                  Sign in
+                </Link>
+              </Button>
+            </SignedOut>
           </div>
         </div>
 
@@ -74,7 +84,7 @@ export default function Home() {
               </div>
               <h3 className="text-2xl font-semibold text-slate-100 tracking-tight">Live Tracking</h3>
               <p className="text-slate-400 leading-relaxed text-lg">
-                Your dashboard updates in real-time. See exactly who's coming, who's maybe, and who's out.
+                Your dashboard updates in real-time. See exactly who&apos;s coming, who&apos;s maybe, and who&apos;s out.
               </p>
             </CardContent>
           </Card>

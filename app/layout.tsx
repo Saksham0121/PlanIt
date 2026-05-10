@@ -33,13 +33,16 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <Providers>
-          <header className="bg-slate-800 border-slate-700 rounded-lg shadow-lg">
-            <div className="flex flex row px-2 py-6 justify-between items-center">
-              <Link href={"/"}>PlanIt</Link>
-              <nav className="flex item-center gap-4">
-                <Link href={"/dashboard"} className="text-sm text-slate-300">
+          <header className="sticky top-4 z-50 w-full max-w-6xl mx-auto px-4 sm:px-6 mt-2">
+            <div className="flex items-center justify-between px-6 py-3 bg-slate-900/60 border border-slate-700/50 rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.12)] backdrop-blur-md">
+              <Link href="/" className="text-xl font-extrabold tracking-tight text-white hover:text-slate-200 transition-colors">
+                PlanIt.
+              </Link>
+              <nav className="flex items-center gap-6">
+                <Link href="/dashboard" className="text-sm font-medium text-slate-300 hover:text-white transition-colors">
                   Dashboard
                 </Link>
+                <div className="h-5 w-px bg-slate-700/60 hidden sm:block" />
                 <UserButton size="icon" />
               </nav>
             </div>
