@@ -7,6 +7,7 @@ import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { submitOrUpdateRsvpAction } from "@/lib/actions/events";
 import { CalendarDays, CheckCircle2, Mail, MapPin, Send, UserRound } from "lucide-react";
+import { logger } from "@/lib/logger";
 
 export async function InviteRsvpContent({
     token,
@@ -32,8 +33,12 @@ export async function InviteRsvpContent({
     })
 
     if(!row){
+        logger.warn("Invite link access failed: Token not found or expired", "InviteUI", { tokenPrefix: token.substring(0, 8) + "..." });
         notFound();
     }
+
+    logger.debug("Rendered InviteRsvpContent page", "InviteUI", { eventId: row.event.id, submitted });
+
     const e = row.event;
     const event = {
         title : e.title,

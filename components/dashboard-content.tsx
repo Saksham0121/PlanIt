@@ -7,6 +7,9 @@ import { RsvpStatus as PrismaRsvpStatus } from "@/app/generated/prisma/enums";
 import { ArrowRight, CalendarDays, MapPin, Plus, Users } from "lucide-react";
 
 
+import { logger } from "@/lib/logger";
+
+
 export function countByStatus(rsvps: {status: PrismaRsvpStatus}[]) {
 
     let goingcount = 0;
@@ -44,6 +47,9 @@ export async function DashboardContent({userId}: {userId: string}) {
         locationName : e.location || "Not specified",
         ...countByStatus(e.rsvps),
     }))
+
+    logger.debug("Rendered DashboardContent", "DashboardUI", { userId, totalEvents: events.length });
+
 
     const totals = events.reduce(
         (acc, event) => ({
